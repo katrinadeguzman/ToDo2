@@ -111,8 +111,8 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-    ToDo *event = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    [self configureCell:cell withEvent:event];
+    ToDo *task = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    [self configureCell:cell withToDo:task];
     return cell;
 }
 
@@ -137,8 +137,8 @@
 }
 
 
-- (void)configureCell:(UITableViewCell *)cell withEvent:(ToDo *)event {
-    cell.textLabel.text = event.toDoTitle;
+- (void)configureCell:(UITableViewCell *)cell withToDo:(ToDo *)task {
+    cell.textLabel.text = task.toDoTitle;
 }
 
 
@@ -211,11 +211,11 @@
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] withEvent:anObject];
+            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] withToDo:anObject];
             break;
             
         case NSFetchedResultsChangeMove:
-            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] withEvent:anObject];
+            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] withToDo:anObject];
             [tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
             break;
     }
