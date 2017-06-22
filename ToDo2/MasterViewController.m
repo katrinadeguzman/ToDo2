@@ -42,7 +42,42 @@
 
 - (void)insertNewObject:(id)sender
 {
-    //alert code to enter new task data
+        UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@"Add ToDo" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+        NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    
+        __block UITextField* titleTextField;
+        __block UITextField* descriptionTextField;
+    
+        [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull task)
+        {
+            task.placeholder = @"Task";
+            task.text = [defaults objectForKey:@"toDoTitle"];
+            titleTextField = task;
+        }];
+    
+        [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull desc)
+        {
+            desc.placeholder = @"Description";
+            desc.text = [defaults objectForKey:@"toDoDescription"];
+            descriptionTextField = desc;
+        }];
+    
+        [alertController addAction:[UIAlertAction actionWithTitle:@"Save" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action)
+        {
+            ToDo* task = [NSEntityDescription insertNewObjectForEntityForName:@"ToDo" inManagedObjectContext:[self managedObjectContext]];
+            task.toDoTitle = titleTextField.text;
+            task.toDoDescription = descriptionTextField.text;
+    
+            NSError* error = nil;
+            if (![self.managedObjectContext save:&error]) {
+                NSLog(@"Error saving: %@",error.localizedDescription);
+            }
+        }]];
+    
+    
+        [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {}]];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
     
 }
 
